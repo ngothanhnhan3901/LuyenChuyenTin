@@ -105,6 +105,9 @@ pre,.cl,.pl,#tyTxt,textarea.jt{font-size:var(--codefs)!important;line-height:var
 .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0}.act{display:flex;flex-direction:column;gap:2px;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;transition:.15s}.act span{font-size:22px}.act small{color:var(--mut);font-size:13px;line-height:1.35}.act.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,var(--card))}
 .th{position:relative;display:inline-block}.th img{height:72px;border-radius:8px;border:1px solid var(--line);display:block}.th button{position:absolute;top:-7px;right:-7px;border-radius:50%;width:24px;height:24px;border:0;background:#d23b3b;color:#fff;cursor:pointer;line-height:1;padding:0}
 .mi{max-width:190px;max-height:150px;border-radius:8px;margin:6px 6px 0 0;display:inline-block}.steps{font-weight:700;margin:10px 0 4px}#tutor.dragover .card{outline:3px dashed var(--acc2)}
+@media(max-width:560px){.logo{font-size:14px}.logo small{display:none}.bar{gap:6px;padding:6px 10px}.chip{padding:4px 8px;font-size:13px}#xpBox .xb{width:26px}#xpBox{gap:5px!important}.bar nav button{padding:5px 10px;font-size:14px}main{padding-top:12px}h1{font-size:24px}}
+.bar #groups{order:2;flex:1 1 100%;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}#groups .chip{white-space:nowrap;font-weight:600}#groups .chip.on{background:var(--acc);border-color:var(--acc);color:#fff}.chip.hl{outline:3px solid var(--acc2);outline-offset:2px;animation:pulse 1.2s infinite}.bar nav{order:3}
+@media(max-width:560px){#groups{gap:4px!important}#groups .chip{font-size:12.5px;padding:5px 6px}.ge{display:none}}
 @media(prefers-reduced-motion:reduce){.cf{display:none}nav button.hl{animation:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -112,6 +115,7 @@ pre,.cl,.pl,#tyTxt,textarea.jt{font-size:var(--codefs)!important;line-height:var
 <body>
 <header><div class="bar">
 <div class="logo">Luyện chuyên Tin<small>C++ · lớp 9 lên lớp 10</small></div>
+<div id="groups" role="tablist" aria-label="Nhóm chức năng"></div>
 <nav role="tablist" id="tabs">
 <button role="tab" data-t="hub" aria-selected="false">Hành trình</button>
 <button role="tab" data-t="road" aria-selected="false">Lộ trình</button>
@@ -125,7 +129,7 @@ pre,.cl,.pl,#tyTxt,textarea.jt{font-size:var(--codefs)!important;line-height:var
 <button role="tab" data-t="rev" aria-selected="false">Ôn tập</button>
 </nav>
 <button class="chip" id="xpBox" aria-label="Cấp và điểm kinh nghiệm" style="display:flex;align-items:center;gap:8px"><b id="lvT">Lv 1</b><span class="xb"><i id="xpFill"></i></span></button>
-<button class="chip" id="vwBtn" aria-label="Tuỳ chỉnh font và cỡ chữ trong khung">Chữ khung</button>
+<button class="chip" id="vwBtn" aria-label="Tuỳ chỉnh font và cỡ chữ trong khung" title="Tuỳ chỉnh font và cỡ chữ trong khung">Chữ</button>
 <button class="chip" id="fsz" aria-label="Đổi cỡ chữ">Aa</button>
 <button class="chip" id="theme" aria-label="Đổi giao diện sáng tối">◐</button>
 </div></header>
@@ -153,10 +157,10 @@ pre,.cl,.pl,#tyTxt,textarea.jt{font-size:var(--codefs)!important;line-height:var
 <div class="card"><h2>Gemini ra bài theo chặng</h2><div class="row"><label>Chặng <select id="gnLv"></select></label><label>Độ khó <select id="gnDf"><option>Dễ, làm quen</option><option selected>Vừa, đúng trình thi chuyên</option><option>Khó, nâng cao</option></select></label><label>Số bài <select id="gnN"><option>3</option><option selected>5</option></select></label><button class="btn p" id="gnGo">Ra bài</button></div><p class="note" id="gnMsg">Cần API key Gemini (đã dán ở tab Gia sư AI). Đề do AI tạo, ví dụ có thể sai nên em tự kiểm tra lại.</p><div id="gnList"></div></div>
 <div class="card"><h2>Bài của em</h2><p class="note">Tự thêm bài từ đề trường, hocchuyentin.com hay nguồn khác để theo dõi trạng thái.</p><div class="row"><input id="cuN" placeholder="Tên bài" style="flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 10px"><input id="cuL" placeholder="Link (không bắt buộc)" style="flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 10px"><button class="btn p" id="cuAdd">Thêm</button></div><div id="cuList"></div></div>
 <div class="card" id="impBox"><h2>Nhập bài từ hocchuyentin.com hoặc trang khác</h2>
-<p class="note">Cách chắc chắn nhất: mở trang bài tập, bấm Ctrl+A rồi Ctrl+C để chép cả trang, quay lại đây dán vào ô dưới. Trang sẽ tách thành danh sách để em tích tiến độ và hỏi gia sư. Gemini có thể lọc bỏ phần menu và xếp bài từ dễ đến khó.</p>
+<p class="note"><b>Cách làm:</b> (1) Bấm Mở trang để vào hocchuyentin.com. (2) Trên trang đó chọn hết rồi sao chép (máy tính: Ctrl+A rồi Ctrl+C; iPhone: nhấn giữ, Chọn tất cả, Sao chép). (3) Quay lại đây bấm <b>Dán từ bộ nhớ tạm</b>. Nếu dán được cả định dạng thì mỗi bài giữ luôn link gốc. Nếu trình duyệt không cho đọc bộ nhớ tạm, chạm giữ vào ô bên dưới và chọn Dán.</p>
 <div class="row"><a class="tag" target="_blank" rel="noopener" href="https://hocchuyentin.com/problems/">Mở hocchuyentin.com/problems</a><button class="btn" id="impTry">Thử tải trực tiếp</button></div>
 <textarea id="impTxt" class="jt" rows="5" style="width:100%" placeholder="Dán nội dung trang vào đây..."></textarea>
-<div class="row"><button class="btn p" id="impParse">Tách danh sách</button><button class="btn" id="impAi">Nhờ Gemini lọc và xếp từ dễ đến khó</button><button class="btn" id="impClear">Xóa danh sách</button></div>
+<div class="row"><button class="btn p" id="impClip">Dán từ bộ nhớ tạm</button><button class="btn" id="impParse">Tách danh sách</button><button class="btn" id="impAi">Nhờ Gemini lọc và xếp từ dễ đến khó</button><button class="btn" id="impClear">Xóa danh sách</button></div>
 <p class="note" id="impMsg"></p>
 <input id="impQ" class="jt" style="width:100%" placeholder="Lọc theo tên, mã hoặc chủ đề...">
 <div id="impList"></div></div>
@@ -256,7 +260,8 @@ function fbCopy(t){try{const a=document.createElement('textarea');a.value=t;a.st
 function copyText(t){try{const p=navigator.clipboard&&navigator.clipboard.writeText(t);if(p&&p.catch)p.catch(()=>fbCopy(t));else if(!p)fbCopy(t)}catch(e){fbCopy(t)}}
 const _fetch=window.fetch.bind(window);window.fetch=(...a)=>_fetch(...a).catch(e=>{if(e&&e.name==='TypeError')throw new Error('Không kết nối được tới máy chủ bên ngoài. Hãy kiểm tra mạng. Nếu em đang mở bản xem nhanh trên Claude thì bản đó chặn kết nối, hãy tải file về máy và mở bằng Chrome hoặc Safari.');throw e});
 function showErr(e){try{let b=document.getElementById('errBar');if(!b){b=document.createElement('div');b.id='errBar';b.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#b3261e;color:#fff;padding:10px 14px;border-radius:10px;font:14px/1.5 monospace;white-space:pre-wrap;cursor:pointer';b.onclick=()=>b.remove();document.body.append(b)}b.textContent='Có lỗi trong trang (bấm để ẩn): '+(e&&e.message||e)}catch(x){}}
-addEventListener('error',ev=>showErr(ev.message+' (dòng '+ev.lineno+')'));addEventListener('unhandledrejection',ev=>showErr(ev.reason));
+addEventListener('error',ev=>{const m=String(ev.message||'');if(!ev.error&&(!ev.filename||/^script error|resizeobserver/i.test(m))){console.warn('Bỏ qua lỗi từ mã bên ngoài trang:',m);return}showErr(m+' (dòng '+ev.lineno+')')});
+addEventListener('unhandledrejection',ev=>{const r=ev.reason;if(!r||(typeof r!=='string'&&r.message===undefined)||/^(AbortError|NotAllowedError)$/.test(r.name||'')){return}showErr(r)});
 const ls={g:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -623,11 +628,11 @@ $('#hubBody').innerHTML=`<div class="card"><h2>Cấp ${L}: ${lvTitle(L)}</h2><di
 $('#hubBody').onclick=e=>{const g=e.target.dataset.go;if(g){show(g);scrollTo(0,0)}if(e.target.id==='tourGo')startTour(0)};
 $('#xpBox').onclick=()=>show('hub');
 const show0=show;
-show=function(id){show0(id);updNext(id);if(id==='hub')renderHub()};
+show=function(id){show0(id);updNext(id);drawGroups(id);if(id==='hub')renderHub()};
 function updNext(id){const i=FLOW.indexOf(id),bar=$('#nextBar');if(i<1){bar.hidden=true;return}const nx=FLOW[i+1]||'hub';bar.hidden=false;$('#nbT').innerHTML='<b>Bước '+i+'/'+(FLOW.length-1)+' · '+NAMES[id]+'</b><br>'+TIP[id];$('#nbGo').textContent=(nx==='hub'?'Về Hành trình':'Tiếp: '+NAMES[nx])+' →';$('#nbGo').onclick=()=>{show(nx);scrollTo(0,0)}}
 const TOUR=[['hub','Chào mừng đến Hành trình!','Mỗi việc học đều cho XP và giúp em lên cấp. Mỗi ngày có 4 nhiệm vụ, xong cả 4 được thưởng thêm. Chuỗi ngày học càng dài càng tốt.',['hub']],['road','Lộ trình và Giáo trình','Lộ trình chia 7 chặng từ cơ bản đến đồ thị. Giáo trình bám theo 7 chương sách của em, mỗi mục có nút Đọc, Hỏi AI và Ra bài tập.',['road','gt']],['doc','Tài liệu và Trực quan','Toàn bộ giáo trình nằm sẵn trong trang, tìm không cần gõ dấu. Tab Trực quan cho em xem thuật toán chạy từng bước.',['doc','viz']],['bank','Bài tập và Chấm bài','Gemini ra bài đúng chặng em đang học, em nộp code ở tab Chấm bài. Qua hết test sẽ nhận nhiều XP nhất.',['bank','jg']],['tutor','Gia sư AI','Dán API key Gemini ở đây. Gia sư gợi ý từng bước và tra giáo trình giúp em. Cách lấy key có trong khung Bắt đầu nhanh ở tab Lộ trình.',['tutor']],['rev','Ôn tập mỗi ngày','Thẻ ghi nhớ nhắc đúng lúc, đoán kết quả code, thi thử bấm giờ và sổ lỗi sai. Thanh phía dưới luôn gợi ý bước tiếp theo, cứ bấm là đi.',['rev']]];
-function startTour(i){const s=TOUR[i];let t=$('#tour');if(!t){t=document.createElement('div');t.id='tour';t.setAttribute('role','dialog');document.body.append(t)}t.hidden=false;show(s[0]);document.querySelectorAll('nav button.hl').forEach(b=>b.classList.remove('hl'));s[3].forEach(k=>{const b=document.querySelector('nav button[data-t='+k+']');if(b)b.classList.add('hl')});t.innerHTML=`<b>${s[1]}</b> <span class="note">(${i+1}/${TOUR.length})</span><p style="margin:6px 0 10px">${s[2]}</p><div class="row"><button class="btn" id="tBack" ${i?'':'disabled'}>Quay lại</button><button class="btn p" id="tNext">${i===TOUR.length-1?'Bắt đầu học':'Tiếp'}</button><button class="btn" id="tSkip">Bỏ qua</button></div>`;$('#tNext').onclick=()=>i===TOUR.length-1?endTour(true):startTour(i+1);$('#tBack').onclick=()=>startTour(i-1);$('#tSkip').onclick=()=>endTour(false)}
-function endTour(fin){$('#tour').hidden=true;document.querySelectorAll('nav button.hl').forEach(b=>b.classList.remove('hl'));ls.s('ct_tour',true);show('hub');if(fin)awardOnce('tour',20,'Hoàn thành hướng dẫn')}
+function startTour(i){const s=TOUR[i];let t=$('#tour');if(!t){t=document.createElement('div');t.id='tour';t.setAttribute('role','dialog');document.body.append(t)}t.hidden=false;show(s[0]);document.querySelectorAll('.hl').forEach(b=>b.classList.remove('hl'));s[3].forEach(k=>{const b=document.querySelector('nav button[data-t='+k+']'),gb=document.querySelector('#groups [data-grp="'+grpOf(k)[0]+'"]');if(b)b.classList.add('hl');if(gb)gb.classList.add('hl')});t.innerHTML=`<b>${s[1]}</b> <span class="note">(${i+1}/${TOUR.length})</span><p style="margin:6px 0 10px">${s[2]}</p><div class="row"><button class="btn" id="tBack" ${i?'':'disabled'}>Quay lại</button><button class="btn p" id="tNext">${i===TOUR.length-1?'Bắt đầu học':'Tiếp'}</button><button class="btn" id="tSkip">Bỏ qua</button></div>`;$('#tNext').onclick=()=>i===TOUR.length-1?endTour(true):startTour(i+1);$('#tBack').onclick=()=>startTour(i-1);$('#tSkip').onclick=()=>endTour(false)}
+function endTour(fin){$('#tour').hidden=true;document.querySelectorAll('.hl').forEach(b=>b.classList.remove('hl'));ls.s('ct_tour',true);show('hub');if(fin)awardOnce('tour',20,'Hoàn thành hướng dẫn')}
 document.addEventListener('click',e=>{const t=e.target;
 if(t.matches('[data-g]')&&t.checked&&!ONCE['gt'+t.dataset.g]){stat('gt');awardOnce('gt'+t.dataset.g,20,'Hiểu một mục giáo trình')}
 if(t.matches('.lv input')&&t.checked)awardOnce('lv'+t.dataset.id,50,'Hoàn thành một chặng trong lộ trình');
@@ -730,6 +735,21 @@ if(d.gh){ctx='Bài "'+g.t+'" (chặng '+g.lv+')';mode='hint';drawActs();show('tu
 if(d.gs!=null&&e.target.checked){genSv[g.id]=true;ls.s('ct_gensv',genSv);if(!ONCE['gn'+g.id]){stat('solved');awardOnce('gn'+g.id,30,'Giải xong bài "'+g.t+'"')}}else if(d.gs!=null){delete genSv[g.id];ls.s('ct_gensv',genSv)}};
 genDraw();
 
+/* dán thông minh: lấy cả link gốc khi dán từ trang web */
+function impFromHtml(html){const d=new DOMParser().parseFromString(html,'text/html'),out=[],seen=new Set(),base=IMPBASE+'/problems/';
+const mk=(a,tr)=>{const n=a.textContent.replace(/\s+/g,' ').trim();if(n.length<3||/^(trang chủ|đăng nhập|đăng ký|next|prev|»|«)$/i.test(n))return;let u='';try{u=new URL(a.getAttribute('href'),base).href}catch(e){return}if(!/^https?:/.test(u)||seen.has(u+n))return;seen.add(u+n);let c='';if(tr){const cells=[...tr.children].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);c=cells.find(x=>x!==n&&/^[A-Za-z][A-Za-z0-9_]{2,24}$/.test(x))||''}out.push({n,c,t:'',l:0,u})};
+d.querySelectorAll('tr').forEach(tr=>{const a=[...tr.querySelectorAll('a[href]')].find(x=>x.textContent.trim().length>=3);if(a)mk(a,tr)});
+if(!out.length)d.querySelectorAll('a[href]').forEach(a=>{if(/problem/i.test(a.getAttribute('href')||''))mk(a,null)});
+return out}
+function impIngest(html,text){let add=html?impFromHtml(html):[];const withLink=add.length>0;if(!add.length)add=impParseText(text||'');const have=new Set(IMP.map(p=>p.n.toLowerCase())),fresh=add.filter(p=>!have.has(p.n.toLowerCase()));IMP=IMP.concat(fresh);impSave();impDraw();$('#impMsg').textContent=fresh.length?'Đã thêm '+fresh.length+' bài'+(withLink?' kèm link gốc':'')+' (tổng '+IMP.length+'). Bài thừa như menu thì bấm ✕ để xóa.':'Không tìm thấy bài mới trong nội dung vừa dán.';return fresh.length}
+$('#impTxt').addEventListener('paste',e=>{const html=e.clipboardData&&e.clipboardData.getData('text/html'),text=e.clipboardData&&e.clipboardData.getData('text/plain');if(html&&/<a\s[^>]*href/i.test(html)){e.preventDefault();impIngest(html,text)}});
+$('#impClip').onclick=async()=>{try{let html='',text='';if(navigator.clipboard&&navigator.clipboard.read){try{for(const it of await navigator.clipboard.read()){if(it.types.includes('text/html'))html=await(await it.getType('text/html')).text();if(it.types.includes('text/plain'))text=await(await it.getType('text/plain')).text()}}catch(e){}}if(!html&&!text&&navigator.clipboard&&navigator.clipboard.readText)text=await navigator.clipboard.readText();if(!html&&!text)throw new Error('trống');impIngest(html,text)}catch(e){$('#impMsg').innerHTML='<span class="err">Trình duyệt chưa cho đọc bộ nhớ tạm. Hãy chạm giữ vào ô bên dưới và chọn Dán.</span>'}};
+/* điều hướng 2 tầng: 5 nhóm */
+const GROUPS=[['hub','🏠','Hành trình',['hub']],['learn','📘','Học',['road','gt','doc','viz']],['practice','✍️','Luyện',['bank','jg','ch']],['tutor','🤖','Hỏi AI',['tutor']],['rev','🧠','Ôn tập',['rev']]];
+const grpOf=id=>GROUPS.find(g=>g[3].includes(id))||GROUPS[0];
+function drawGroups(id){const g=grpOf(id);$('#groups').innerHTML=GROUPS.map(x=>`<button class="chip ${x===g?'on':''}" data-grp="${x[0]}" aria-pressed="${x===g}"><span class="ge">${x[1]}</span> ${x[2]}</button>`).join('');document.querySelectorAll('#tabs button').forEach(b=>{b.style.display=g[3].includes(b.dataset.t)?'':'none'});$('#tabs').style.display=g[3].length<2?'none':'flex'}
+$('#groups').onclick=e=>{const k=e.target.closest('[data-grp]');if(!k)return;show(GROUPS.find(x=>x[0]===k.dataset.grp)[3][0]);scrollTo(0,0)};
+drawGroups(location.hash.slice(1)||'hub');
 const FS=[17,18,20,22];let fi=ls.g('ct_fs',1);const setFs=()=>document.documentElement.style.setProperty('--fs',FS[fi]+'px');setFs();$('#fsz').onclick=()=>{fi=(fi+1)%FS.length;ls.s('ct_fs',fi);setFs()};
 drawToday();
 
